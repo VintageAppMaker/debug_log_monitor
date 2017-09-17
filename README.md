@@ -12,6 +12,35 @@
  
 그러므로 서버 개발(또는 디버깅)을 할 때는 디버깅 메시지가 출력되고 실제 서비스 될 때는 디버깅 메시지가 출력 안되게 할 필요가 생긴다. 이런 목적을 달성하기 위해 windows의 OutputDebugString() 함수와 Debugging API를 사용해보도록 한다.
 
+Debug 상태를 체크하며 OutputDebugString을 사용할 수 있는방법은 다음 해더를 사용하면 된다.
+~~~c++
+
+<DEBSTRING.h>
+
+#ifndef __PSW_DEBUGSTRING__
+#define __PSW_DEBUGSTRING__
+ 
+// John Robbins
+inline BOOL AntiHackIsDebuggerPresent()
+{
+    BOOL bRet = TRUE;
+ 
+    __asm
+    {
+        MOV EAX, FS:[00000018H]
+        MOV EAX, DWORD PTR [EAX+030H]
+        MOVZX EAX, BYTE PTR [EAX+002H]
+        MOV bRet, EAX
+    }
+ 
+return bRet;
+}
+ 
+#define LOG( a ) if( AntiHackIsDebuggerPresent() ) OutputDebugString(a);
+ 
+#endif
+~~~
+
 ### 구성
  
 ![](http://postfiles1.naver.net/20120518_128/adsloader_1337345035247fu8fT_JPEG/1.PNG?type=w2)
