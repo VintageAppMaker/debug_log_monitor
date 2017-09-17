@@ -33,7 +33,7 @@ inline BOOL AntiHackIsDebuggerPresent()
         MOV bRet, EAX
     }
  
-return bRet;
+    return bRet;
 }
  
 #define LOG( a ) if( AntiHackIsDebuggerPresent() ) OutputDebugString(a);
